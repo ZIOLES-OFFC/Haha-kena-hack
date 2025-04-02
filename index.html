@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enkripsi JavaScript</title>
+</head>
+<body>
+    <h2>Masukkan Kode JavaScript:</h2>
+    <textarea id="inputCode" rows="5" cols="50">console.log("Hello, world!");</textarea>
+    <br><br>
+
+    <button onclick="encryptBase64()">Enkripsi Base64</button>
+    <button onclick="encryptUnicode()">Enkripsi Unicode</button>
+    <br><br>
+
+    <h3>Kode Hasil:</h3>
+    <textarea id="outputCode" rows="5" cols="50" readonly></textarea>
+    <br><br>
+
+    <h3>Jalankan Kode Hasil:</h3>
+    <button onclick="runEncryptedCode()">Jalankan</button>
+
+    <script>
+        function encryptBase64() {
+            let input = document.getElementById("inputCode").value;
+            let encoded = btoa(unescape(encodeURIComponent(input)));
+            let result = `eval(atob("${encoded}"));`;
+            document.getElementById("outputCode").value = result;
+        }
+
+        function encryptUnicode() {
+            let input = document.getElementById("inputCode").value;
+            let unicode = input.split("").map(c => "\\u" + c.charCodeAt(0).toString(16).padStart(4, "0")).join("");
+            let result = `eval("${unicode}".replace(/\\\\u([0-9a-fA-F]{4})/g, (m, cc) => String.fromCharCode(parseInt(cc, 16))));`;
+            document.getElementById("outputCode").value = result;
+        }
+
+        function runEncryptedCode() {
+            let code = document.getElementById("outputCode").value;
+            eval(code);
+        }
+    </script>
+</body>
+</html>
